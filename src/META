@@ -1,0 +1,13 @@
+# OASIS_START
+# DO NOT EDIT (digest: 65eb1fef7d0b840bd1e24cc40e84c0e3)
+version = "0.1"
+description =
+"A simple library that allows to query a minecraft server (Status Query Protocol)."
+requires = "lwt lwt.unix"
+archive(byte) = "mcquery.cma"
+archive(byte, plugin) = "mcquery.cma"
+archive(native) = "mcquery.cmxa"
+archive(native, plugin) = "mcquery.cmxs"
+exists_if = "mcquery.cma"
+# OASIS_STOP
+
