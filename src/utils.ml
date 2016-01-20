@@ -12,6 +12,9 @@ let bytes_to_short b =
     let b2 = int_of_char (Bytes.get b 1) in
     (b2 lsl 8) + b1
 
+(*
+ * Function used to build a stream that return strings
+ *)
 let split_string str =
     let pos = ref 0 in
     let length = Bytes.length str in
