@@ -37,18 +37,23 @@ struct
         (b2 lsl 8) + b1
 end
 
+let bytes_to_short b =
+    let b1 = int_of_char (Bytes.get b 0) in
+    let b2 = int_of_char (Bytes.get b 1) in
+    (b2 lsl 8) + b1
 
-module Buffer =
-struct
-    include Buffer
-
-    let add_int buffer nb =
-        let mask = ref 0xFF000000 in
-        let shift = ref 24 in
-        for i = 0 to 3 do
-            Buffer.add_char buffer (char_of_int ((nb land !mask) lsr !shift));
-            mask := !mask lsr 8;
-            shift := !shift - 8
-        done
-end
+let split_string str =
+    let pos = ref 0 in
+    let length = Bytes.length str in
+    let split _ =
+        if !pos >= length then
+            None
+        else begin
+            let index = Bytes.index_from str !pos '\x00' in
+            let result = Some (Bytes.sub str !pos (index - !pos)) in
+            pos := index + 1;
+            result
+        end
+    in
+    split
 
