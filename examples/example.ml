@@ -10,10 +10,10 @@
 open Lwt
 
 
-let display_basic_stat host port =
-    Mcquery.get_basic_stat host port
+let display_full_stat host port =
+    Mcquery.get_full_stat host port
     >>= fun stat ->
-        Mcquery.display_basic_stat stat;
+        Mcquery.display_full_stat stat;
         Lwt.return_unit
 
 let _ =
@@ -22,5 +22,6 @@ let _ =
     else
         let host = Sys.argv.(1) in
         let port = int_of_string Sys.argv.(2) in
-        Lwt_main.run (display_basic_stat host port)
+        Lwt_main.run (display_full_stat host port)
+
 
