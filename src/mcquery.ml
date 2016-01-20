@@ -54,8 +54,7 @@ let packet_type_to_char = function
  *)
 let make_packet type_ session payload =
     let buffer = Mybuffer.create (7 + (String.length payload)) in
-    Mybuffer.add_char buffer '\xFE';
-    Mybuffer.add_char buffer '\xFD';
+    Mybuffer.add_string buffer "\xFE\xFD";
     Mybuffer.add_char buffer (packet_type_to_char type_);
     Mybuffer.add_int  buffer session;
     String.iter (fun c -> Buffer.add_char buffer c) payload;
@@ -65,12 +64,9 @@ let make_packet type_ session payload =
  * Check if the packet header is valid by checking its Type and its Session ID.
  *)
 let check_packet response length type_ session =
-    length >= 4 &&
-    Bytes.get response 0 = (packet_type_to_char type_) &&
-    Bytes.get response 1 = (char_of_int ((session land 0xFF000000) lsr 24)) &&
-    Bytes.get response 2 = (char_of_int ((session land 0x00FF0000) lsr 16)) &&
-    Bytes.get response 3 = (char_of_int ((session land 0x0000FF00) lsr 8)) &&
-    Bytes.get response 4 = (char_of_int (session land 0x000000FF))
+    let packet_session = Utils.bytes_to_int (Bytes.sub response 1 4) in
+    length >= 4 && response.[0] = (packet_type_to_char type_) &&
+    packet_session = session
 
 (*
  * Send a handshake request to the server and get the challenge from the server
@@ -128,7 +124,7 @@ let get_keys_values stream =
     let loop   = ref true in
     while !loop do
         try
-            let key   = Stream.next stream in
+            let key = Stream.next stream in
             if Bytes.length key = 0 then
                 loop := false
             else
@@ -140,7 +136,7 @@ let get_keys_values stream =
     values
 
 let get_players stream =
-    let loop = ref true in
+    let loop    = ref true in
     let players = ref [] in
     while !loop do
         try
@@ -149,7 +145,8 @@ let get_players stream =
                 loop := false
             else
                 players := player :: !players
-        with Stream.Failure -> loop := false
+        with
+            Stream.Failure -> loop := false
     done;
     !players
 

@@ -12,6 +12,12 @@ let bytes_to_short b =
     let b2 = int_of_char (Bytes.get b 1) in
     (b2 lsl 8) + b1
 
+let bytes_to_int b =
+    (int_of_char b.[3]) +
+    ((int_of_char b.[2]) lsr 8) +
+    ((int_of_char b.[1]) lsr 16) +
+    ((int_of_char b.[0]) lsr 24)
+
 (*
  * Function used to build a stream that return strings
  *)

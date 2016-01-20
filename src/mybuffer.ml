@@ -17,3 +17,4 @@ let add_int buffer nb =
         mask := !mask lsr 8;
         shift := !shift - 8
     done
+
