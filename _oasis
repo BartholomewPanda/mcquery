@@ -11,6 +11,6 @@ Library mcquery
   Path:       src/
   BuildTools: ocamlbuild
   Modules:    Mcquery
-  InternalModules: Utils, Network
+  InternalModules: Utils, Network, Mybuffer
   BuildDepends: lwt, lwt.unix
   
